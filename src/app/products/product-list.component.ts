@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { IProduct } from "./products";
+import { IProduct } from "./product";
+import { ProductService } from "./product.service";
 @Component({
   selector: "pm-products",
   templateUrl: "./product-list.component.html",
@@ -10,6 +11,7 @@ export class ProductListComponent implements OnInit {
   imageWidth: number = 50;
   imageMargin: number = 2;
   showImage: boolean = false;
+  errorMessage: string = '';
   _listFilter: string;
   get listFilter(): string {
     return this._listFilter;
@@ -21,31 +23,12 @@ export class ProductListComponent implements OnInit {
       : this.products;
   }
   filteredProducts: IProduct[];
-  products: IProduct[] = [
-    {
-      productId: 2,
-      productName: "Garden Cart",
-      productCode: "GDN-0023",
-      releaseDate: "March 18,2019",
-      description: "15 gallon capacity rolling garden cart",
-      price: 32.99,
-      starRating: 4.2,
-      imageUrl: "assets/iamges/garden_cart.png",
-    },
-    {
-      productId: 5,
-      productName: "Hammer",
-      productCode: "TBX-0048",
-      releaseDate: "May 21,2019",
-      description: "Curved Claw Steel Hammer",
-      price: 8.9,
-      starRating: 4.8,
-      imageUrl: "assets/iamges/hammer.png",
-    },
-  ];
-  constructor() {
-    this.filteredProducts = this.products;
+  products: IProduct[] = [];
+  constructor(private productService: ProductService) {
     this.listFilter = "";
+  }
+  onRatingClicked(message: string): void {
+    this.pageTitle = "Product List: " + message;
   }
   performFilter(filterBy: string): IProduct[] {
     filterBy = filterBy.toLocaleLowerCase();
@@ -60,6 +43,13 @@ export class ProductListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("OnInit");
+    this.productService.getProducts().subscribe({
+      next: products => {
+        this.products = products;
+        this.filteredProducts = products;
+      },
+      error: err => this.errorMessage = err
+    });
+    this.filteredProducts = this.products;
   }
 }

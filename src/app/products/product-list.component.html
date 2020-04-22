@@ -48,7 +48,7 @@
           <th>
             {{ product.price | currency: "USD":"symbol":"1.2-2" | lowercase }}
           </th>
-          <th>{{ product.starRating }}</th>
+          <th><pm-star [rating] = "product.starRating" (ratingClicked)="onRatingClicked($event)"></pm-star></th>
         </tr>
       </tbody>
     </table>
