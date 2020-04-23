@@ -42,13 +42,22 @@
               [style.margin.px]="imageMargin"
             />
           </td>
-          <th>{{ product.productName }}</th>
+          <th>
+            <a [routerLink]="['/products', product.productId]">{{
+              product.productName
+            }}</a>
+          </th>
           <th>{{ product.productCode | lowercase | convertToSpaces: "-" }}</th>
           <th>{{ product.releaseDate }}</th>
           <th>
             {{ product.price | currency: "USD":"symbol":"1.2-2" | lowercase }}
           </th>
-          <th><pm-star [rating] = "product.starRating" (ratingClicked)="onRatingClicked($event)"></pm-star></th>
+          <th>
+            <pm-star
+              [rating]="product.starRating"
+              (ratingClicked)="onRatingClicked($event)"
+            ></pm-star>
+          </th>
         </tr>
       </tbody>
     </table>
